@@ -1,0 +1,44 @@
+.neofetch {
+    background-color: rgb(37,22,33);
+    width: 100vw;
+    height: 94vh;
+}
+
+.neofetch-logo {
+    background-color: rgb(37,22,33);
+    width: 50vw;
+    height: 94vh;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+pre {
+    text-align: right;
+    margin-right: 15%;
+}
+
+.neofetch-stats {
+    background-color: rgb(37,22,33); 
+    width: 50vw;
+    height: 94vh;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.neofetch-stats-item {
+    margin: 0vh;
+}
+
+.neofetch-colors {
+    display: flex;
+    flex-direction: row;
+}
+
+.neofetch-color-item {
+    width: 2em;
+    height: 2em;
+}

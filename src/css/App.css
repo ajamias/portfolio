@@ -1,0 +1,33 @@
+.App {
+  background-color: rgb(37,22,33);
+  outline: none;
+  color: #dad0ce;
+  height: 100vh;
+}
+
+.cmd-prompt {
+  background-color: rgb(37,22,33);
+  padding-left: 5vw;
+  padding-right: 5vw;
+  margin-top: 0;
+  padding-top: 2vh;
+  margin-bottom: 0;
+  padding-bottom: 2vh;
+  word-break: break-all;
+}
+
+#stdin::after {
+  position: absolute;
+  content: "";
+  width: 1ch;
+  height: 1lh;
+  background: #dad0ce;
+  display: inline-block;
+  animation: cursor-blink 1s steps(1) infinite;
+}
+
+@keyframes cursor-blink {
+  0% {opacity: 0;}
+  50% {opacity: 100;}
+  100% {opacity: 0;}
+}

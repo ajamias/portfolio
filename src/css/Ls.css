@@ -1,0 +1,10 @@
+.ls {
+    background-color: rgb(37,22,33);
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.file {
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
