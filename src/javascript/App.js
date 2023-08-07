@@ -1,67 +1,80 @@
 import { useState, useEffect} from "react"
+import { parsePath } from "./parsePath";
 import '../css/App.css';
 import Neofetch from "./Neofetch.js";
 import Ls from "./Ls.js";
+import Cat from "./Cat.js";
+import Pwd from "./Pwd";
 
 const App = () => {
 	const [stdin, setStdin] = useState("neofetch");
 	const [history, setHistory] = useState([["neofetch"]]);
 	const [fs, setFs] = useState({
-		path: "/",
-		files: ["bin", "boot", "dev", "etc", "home", "lib", "media", "mnt", "opt", "sbin", "srv", "tmp", "usr", "proc", "var"],
-		dirs: [
-			{
-				path: "home",
-				files: ["README.txt", "about.txt", "skills.csv"],
-				dirs: []
-			}
-		]
+		"/": {
+			files: {},
+			dirs: ["bin", "boot", "dev", "etc", "home", "lib", "media", "mnt", "opt", "proc", "sbin", "srv", "tmp", "usr", "var"]
+		},
+		"/home": {
+			files: {
+				"README.txt": "Welcome to JamiaOS, an operating system on the browser.",
+				"about.txt": "",
+				"skills.csv": ""
+			},
+			dirs: []
+		}
 	});
 	const [cwd, setCwd] = useState("/home");
 
 	useEffect(() => {
-		const handle_enter = () => {
+		const handleEnter = () => {
 			let args = stdin.trim().split(/\u00A0+/u);
 			setHistory([args, ...history]);
 			setStdin("");
+			if (args[0] === "cd") {
+				if (args.length > 1)
+					setCwd(parsePath(args, cwd));
+				else
+					setCwd("/home");
+			}
 		}
 
-		const handle_key = (event) => {
+		const handleKey = (event) => {
 			if (event.key === "Backspace") {
 				if (stdin.length) {
 					setStdin(stdin.slice(0,-1));
 				}
 			} else if (event.key === "Enter") {
-				handle_enter();
+				handleEnter();
 			} else if (event.key === " ") {
 					event.preventDefault();
 					setStdin(stdin + "\u00A0");
-			} else {
+			} else if (event.key.length === 1) {
 				setStdin(stdin + event.key);
 			}
 		}
 
-		document.addEventListener('keydown', handle_key);
+		document.addEventListener('keydown', handleKey);
 		return () => {
-			document.removeEventListener('keydown', handle_key);
+			document.removeEventListener('keydown', handleKey);
 		}
-	}, [stdin, history]);
+	}, [stdin, history, cwd]);
 
-	// TODO: work with ls
 	return (
 		<div className="App">
 			<p className="cmd-prompt" id="stdin"><span style={{"color": "#698894"}}>ajamias@JamiaOS:~$</span>&nbsp;{stdin}</p>
-			{history.map((cmd) => {
+			{history.map((cmd, key) => {
+				//console.log(cmd);
 				switch (cmd[0]) {
 					case "neofetch":
-						return <Neofetch />;
+						return <Neofetch key={key}/>;
 					case "ls":
-						return <>
-							<p className="cmd-prompt"><span style={{"color": "#698894"}}>ajamias@JamiaOS:~$</span>&nbsp;{cmd.join("\u00A0")}</p>
-							<Ls fs={fs} command={cmd} current_dir={cwd}/>
-						</>;
+						return <Ls fs={fs} cmd={cmd} cwd={cwd} key={key}/>
 					case "cat":
-						break;
+						return <Cat fs={fs} cmd={cmd} cwd={cwd} key={key}/>
+					case "pwd":
+						return <Pwd cmd={cmd} cwd={cwd} key={key}/>
+					case "cd":
+						return <p className="cmd-prompt" key={key}><span style={{"color": "#698894"}}>ajamias@JamiaOS:~$</span>&nbsp;{cmd.join("\u00A0")}</p>
 					case "clear":
 						setHistory([]);
 						break;
